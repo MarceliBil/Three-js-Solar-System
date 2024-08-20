@@ -1,1 +1,1 @@
-https://three-js-mb.netlify.app/
+(https://three-js-mb.netlify.app/){:target="_blank"
