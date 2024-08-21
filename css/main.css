@@ -7,4 +7,8 @@
 body {
   background-color: #000;
   overflow: hidden;
+}
+
+canvas {
+  cursor: grab;
 }/*# sourceMappingURL=main.css.map */

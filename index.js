@@ -13,7 +13,7 @@ const scene = new THREE.Scene();
 
 
 const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, .0001, 1000);
-camera.position.set(15, 5, 35);
+camera.position.set(15, 5, 20);
 
 
 const cameraHelper = new THREE.CameraHelper(camera);
@@ -31,6 +31,8 @@ const renderer = new THREE.WebGLRenderer({
 });
 
 
+
+
 const controls = new OrbitControls(camera, renderer.domElement);
 
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -45,12 +47,14 @@ const handleResize = () => {
 }
 
 
-const createSphere = (r = 1, color = 0xffffff) => {
+const createSphere = (r = 1, color = 0xffffff, transparent = false, opacity = 1) => {
 
      const sphereGeo = new THREE.SphereGeometry(r, 20, 20);
      const sphereMat = new THREE.MeshPhongMaterial({
           color,
           shininess: 50,
+          transparent: transparent,
+          opacity: opacity
      })
 
      return new THREE.Mesh(sphereGeo, sphereMat);
@@ -68,11 +72,21 @@ const l1 = createPointLight();
 const pointLightHelper = new THREE.PointLightHelper(l1, 1); // 1 is the size of the helper sphere
 scene.add(pointLightHelper);
 
-l1.position.set(0, 0, 20);
-scene.add(l1);
+nucleus.add(l1);
 
 
 scene.add(nucleus);
+
+
+const glowMaterial = new THREE.MeshBasicMaterial({
+     color: 0xffcc00,
+     transparent: false,
+     opacity: 1,
+     blending: THREE.AdditiveBlending,
+ });
+ 
+ const glowSphere = new THREE.Mesh(new THREE.SphereGeometry(6, 20, 20), glowMaterial);
+ nucleus.add(glowSphere);
 
 
 const createElectron = (r= .4, color = 0xffffff) => {
