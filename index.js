@@ -12,8 +12,8 @@ const scene = new THREE.Scene();
 // });
 
 
-const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, .0001, 10000);
-camera.position.set(0, 0, 40);
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, .0001, 1000);
+camera.position.set(15, 5, 35);
 
 
 const cameraHelper = new THREE.CameraHelper(camera);
@@ -50,28 +50,29 @@ const createSphere = (r = 1, color = 0xffffff) => {
      const sphereGeo = new THREE.SphereGeometry(r, 20, 20);
      const sphereMat = new THREE.MeshPhongMaterial({
           color,
-          shininess: 30,
+          shininess: 50,
      })
 
      return new THREE.Mesh(sphereGeo, sphereMat);
 }
 
 
-const createPointLight = (i = 1, color = 0xffffff) => {
-     return new THREE.PointLight(color, i);
+const createPointLight = (i = 800, d = 100, color = 0xffffff) => {
+     return new THREE.PointLight(color, i, d);
 }
 
 
 const nucleus = createSphere(5, 0xebb400);
-const l1 = createPointLight(1);
+const l1 = createPointLight();
 
 const pointLightHelper = new THREE.PointLightHelper(l1, 1); // 1 is the size of the helper sphere
 scene.add(pointLightHelper);
 
-l1.position.set(0, 0, 10);
+l1.position.set(0, 0, 20);
+scene.add(l1);
 
 
-scene.add(nucleus, l1);
+scene.add(nucleus);
 
 
 const createElectron = (r= .4, color = 0xffffff) => {
