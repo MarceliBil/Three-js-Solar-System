@@ -1,24 +1,37 @@
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.154.0/build/three.module.js';
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 const scene = new THREE.Scene();
 
-// Create a texture loader
-const loader = new THREE.TextureLoader();
 
-// Load the texture and set it as the scene background
-loader.load('images/scene-bg-1.webp', (texture) => {
-     scene.background = texture;
-});
+
+// const loader = new THREE.TextureLoader();
+
+// loader.load('images/space-bg.jpg', (texture) => {
+//      scene.background = texture;
+// });
 
 
 const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, .0001, 10000);
-camera.position.set(0, 0, 40)
+camera.position.set(0, 0, 40);
+
+
+const cameraHelper = new THREE.CameraHelper(camera);
+scene.add(cameraHelper);
+
+
+
+const gridHelper = new THREE.GridHelper(200, 50);
+scene.add(gridHelper);
+
 
 const renderer = new THREE.WebGLRenderer({ 
      antialias: true,
      alpha: true,
 });
 
+
+const controls = new OrbitControls(camera, renderer.domElement);
 
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
@@ -49,16 +62,16 @@ const createPointLight = (i = 1, color = 0xffffff) => {
 }
 
 
-const nucleus = createSphere(3);
-const l1 = createPointLight(.9);
-const l2 = createPointLight(.5);
+const nucleus = createSphere(5, 0xebb400);
+const l1 = createPointLight(1);
 
-l1.position.set(60, 20, 60);
-l2.position.set(-30, 0, 20);
+const pointLightHelper = new THREE.PointLightHelper(l1, 1); // 1 is the size of the helper sphere
+scene.add(pointLightHelper);
+
+l1.position.set(0, 0, 10);
 
 
-nucleus.add(l1);
-scene.add(nucleus);
+scene.add(nucleus, l1);
 
 
 const createElectron = (r= .4, color = 0xffffff) => {
@@ -73,38 +86,22 @@ const createElectron = (r= .4, color = 0xffffff) => {
      }
 }
 
-const e1 = createElectron();
-const e2 = createElectron();
-const e3 = createElectron();
-const e4 = createElectron();
+const e1 = createElectron(1, 0x0051c9);
 
-e1.sphere.position.set(10, 0, 0);
-e2.sphere.position.set(5, 0, 0);
-e3.sphere.position.set(-5, 0, 0);
-e4.sphere.position.set(-10, 0, 0);
+e1.sphere.position.set(-10, 0, 0);
 
-nucleus.add(e1.pivot, e2.pivot, e3.pivot, e4.pivot);
-
-e1.pivot.rotation.y += 90;
-e2.pivot.rotation.y += 60;
-e3.pivot.rotation.y += -60;
-e4.pivot.rotation.y += -90;
+nucleus.add(e1.pivot);
 
 
 const loop = () => {
-     // nucleus.rotation.z +=0.01;
 
-     e1.pivot.rotation.z += .04;
-     e2.pivot.rotation.z += .03;
-     e3.pivot.rotation.z += .03;
-     e4.pivot.rotation.z += .04;
-
-     nucleus.rotation.z += .001;
-     nucleus.rotation.x += .002;
-     nucleus.rotation.y += .003;
+     e1.pivot.rotation.y += .02;
 
      renderer.render(scene, camera);
      requestAnimationFrame(loop);
+
+
+     controls.update();
 }
 
 loop();
