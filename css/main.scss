@@ -7,9 +7,20 @@
 body {
     background-color: #000;
     overflow: hidden;
+    font-family: sans-serif;
 }
 
 
 canvas {
     cursor: grab;
+}
+
+
+.footer {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #fff;
+    text-align: center;
 }

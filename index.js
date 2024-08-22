@@ -2,123 +2,80 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
+camera.position.set(40, 20, 35)
 
-
-// const loader = new THREE.TextureLoader();
-
-// loader.load('images/space-bg.jpg', (texture) => {
-//      scene.background = texture;
-// });
-
-
-const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, .0001, 1000);
-camera.position.set(15, 5, 20);
-
-
-const cameraHelper = new THREE.CameraHelper(camera);
-scene.add(cameraHelper);
-
-
-
-const gridHelper = new THREE.GridHelper(200, 50);
-scene.add(gridHelper);
-
-
-const renderer = new THREE.WebGLRenderer({ 
-     antialias: true,
-     alpha: true,
-});
-
-
-
-
-const controls = new OrbitControls(camera, renderer.domElement);
-
+const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.25;
 
-const handleResize = () => {
-     const { innerWidth, innerHeight } = window;
-     renderer.setSize(innerWidth, innerHeight);
-     camera.aspect = innerWidth / innerHeight;
-     camera.updateProjectionMatrix();
+const gridHelper = new THREE.GridHelper(100, 20); // 100 jednostek, 50 podziałek
+scene.add(gridHelper);
+
+const axesHelper = new THREE.AxesHelper(50); // Długość osi: 50 jednostek
+scene.add(axesHelper);
+
+
+const textureLoader = new THREE.TextureLoader();
+
+const sunTexture = textureLoader.load('images/sun-texture.jpg');
+const earthTexture = textureLoader.load('images/earth-texture.jpg');
+const moonTexture = textureLoader.load('images/moon-texture.jpg');
+
+const sunMaterial = new THREE.MeshBasicMaterial({ map: sunTexture });
+const earthMaterial = new THREE.MeshPhongMaterial({ map: earthTexture });
+const moonMaterial = new THREE.MeshPhongMaterial({ map: moonTexture });
+
+const sunGeometry = new THREE.SphereGeometry(10, 32, 32);
+const earthGeometry = new THREE.SphereGeometry(5, 32, 32);
+const moonGeometry = new THREE.SphereGeometry(1.5, 32, 32);
+
+const sunMesh = new THREE.Mesh(sunGeometry, sunMaterial);
+const earthMesh = new THREE.Mesh(earthGeometry, earthMaterial);
+const moonMesh = new THREE.Mesh(moonGeometry, moonMaterial);
+
+sunMesh.position.set(0, 0, 0);
+earthMesh.position.set(30, 0, 0);
+
+
+const earthPivot = new THREE.Object3D();
+scene.add(earthPivot);
+
+earthPivot.add(earthMesh);
+
+
+earthPivot.add(moonMesh);
+moonMesh.position.set(20, 0, 0);
+
+scene.add(sunMesh);
+
+const ambientLight = new THREE.AmbientLight(0x404040, 10);
+scene.add(ambientLight);
+
+
+function animate() {
+    requestAnimationFrame(animate);
+
+     earthMesh.rotation.y += 0.01;
+
+     earthPivot.rotation.y += 0.01;
+
+    renderer.render(scene, camera);
 }
 
-
-const createSphere = (r = 1, color = 0xffffff, transparent = false, opacity = 1) => {
-
-     const sphereGeo = new THREE.SphereGeometry(r, 20, 20);
-     const sphereMat = new THREE.MeshPhongMaterial({
-          color,
-          shininess: 50,
-          transparent: transparent,
-          opacity: opacity
-     })
-
-     return new THREE.Mesh(sphereGeo, sphereMat);
-}
+animate();
 
 
-const createPointLight = (i = 800, d = 100, color = 0xffffff) => {
-     return new THREE.PointLight(color, i, d);
-}
+window.addEventListener('resize', () => {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
 
-
-const nucleus = createSphere(5, 0xebb400);
-const l1 = createPointLight();
-
-const pointLightHelper = new THREE.PointLightHelper(l1, 1); // 1 is the size of the helper sphere
-scene.add(pointLightHelper);
-
-nucleus.add(l1);
-
-
-scene.add(nucleus);
-
-
-const glowMaterial = new THREE.MeshBasicMaterial({
-     color: 0xffcc00,
-     transparent: false,
-     opacity: 1,
-     blending: THREE.AdditiveBlending,
- });
- 
- const glowSphere = new THREE.Mesh(new THREE.SphereGeometry(6, 20, 20), glowMaterial);
- nucleus.add(glowSphere);
-
-
-const createElectron = (r= .4, color = 0xffffff) => {
-     const sphere = createSphere(r, color);
-     const pivot = new THREE.Object3D();
-
-     pivot.add(sphere);
-
-     return {
-          sphere,
-          pivot
-     }
-}
-
-const e1 = createElectron(1, 0x0051c9);
-
-e1.sphere.position.set(-10, 0, 0);
-
-nucleus.add(e1.pivot);
-
-
-const loop = () => {
-
-     e1.pivot.rotation.y += .02;
-
-     renderer.render(scene, camera);
-     requestAnimationFrame(loop);
-
-
-     controls.update();
-}
-
-loop();
-
-window.addEventListener('resize', handleResize);
+    renderer.setSize(width, height);
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+});
