@@ -1,3 +1,8 @@
+// Import all of Bootstrap's CSS
+@import "~bootstrap/scss/bootstrap";
+@import "@fortawesome/fontawesome-free/css/all.css";
+
+
 * {
     padding: 0;
     margin: 0;
@@ -6,13 +11,24 @@
 
 body {
     background-color: #000;
+    color: #fff;
     overflow: hidden;
     font-family: sans-serif;
+    font-size: 1.1em;
+}
+
+
+@mixin flex() {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 
 canvas {
     cursor: grab;
+    position: absolute;
+    inset: 0;
 }
 
 
@@ -23,4 +39,105 @@ canvas {
     transform: translateX(-50%);
     color: #fff;
     text-align: center;
+}
+
+
+.info {
+    position: absolute;
+    border: 1px solid #fff;
+    height: 50px;
+    width: 100%;
+    max-width: 300px;
+    @include flex;
+    top: 30px;
+    right: 30px;
+    pointer-events: none;
+}
+
+
+.button {
+    position: absolute;
+    border: 1px solid #fff;
+    padding: 0 15px;
+    width: 100px;
+    height: 50px;
+    outline: none;
+    background-color: #fff;
+    color: #000;
+    right: 30px;
+    top: 100px;
+    transition: background-color .2s, color .2s;
+    cursor: pointer;
+    @include flex;
+    font-size: 1.1em;
+
+
+    &__play,
+    &__pause { transition: opacity .3s; }
+
+
+    &__play {
+        position: absolute;
+        opacity: 0;
+    }
+
+
+    &.is-paused {
+
+        .button__play { opacity: 1; }
+
+        .button__pause { opacity: 0; }
+    }
+
+
+    &:hover {
+        background-color: #000;
+        color: #fff;
+    }
+}
+
+
+.info-box {
+    border: 1px solid #fff;
+    width: fit-content;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 20px;
+    background-color: rgba(#000, .7) !important;
+    z-index: 1;
+    pointer-events: none;
+}
+
+
+.control-panel {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1;
+    border: 1px solid #fff;
+    border-radius: 0.375rem;
+    padding: 1rem;
+    background-color: rgba(#000, .7);
+
+
+    label,
+    input {
+        cursor: pointer;
+    }
+
+    .btn {
+        border: 1px solid #fff;
+        border-radius: 0.375rem;
+        color: #fff;
+        margin-top: 10px;
+
+        &:hover {
+            background-color: #fff;
+            color: #000;
+        }
+    }
 }

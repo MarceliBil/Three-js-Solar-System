@@ -1,15 +1,20 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
+
+let isPaused = false;
+let isBackground = true;
+let isHelpers = true;
+
 // scene
 const scene = new THREE.Scene();
 
 // camera
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(20, 10, 35)
+const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.0001, 10000);
+camera.position.set(10, 20, 70)
 
 // renderer
-const renderer = new THREE.WebGLRenderer();
+const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
@@ -18,11 +23,11 @@ const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.25;
 
-const gridHelper = new THREE.GridHelper(100, 20);
-scene.add(gridHelper);
+const gridHelper = new THREE.GridHelper(200, 20);
+const axesHelper = new THREE.AxesHelper(100);
 
-const axesHelper = new THREE.AxesHelper(50);
-scene.add(axesHelper);
+scene.add(gridHelper, axesHelper);
+
 
 // texture loader
 const textureLoader = new THREE.TextureLoader();
@@ -44,13 +49,13 @@ const earthMesh = new THREE.Mesh(earthGeometry, earthMaterial);
 const moonMesh = new THREE.Mesh(moonGeometry, moonMaterial);
 
 sunMesh.position.set(0, 0, 0);
-earthMesh.position.set(30, 0, 0);
+earthMesh.position.set(35, 0, 0);
 earthMesh.rotation.z = THREE.MathUtils.degToRad(23.5);
 
 
 const moonOrbitPivot = new THREE.Object3D();
 moonOrbitPivot.add(moonMesh);
-moonOrbitPivot.position.x = 30;
+moonOrbitPivot.position.copy(earthMesh.position);
 
 const earthPivot = new THREE.Object3D();
 earthPivot.add(moonOrbitPivot)
@@ -63,21 +68,39 @@ moonMesh.position.set(10, 0, 0);
 
 scene.add(sunMesh);
 
-const ambientLight = new THREE.AmbientLight(0x404040, 10);
+const sunLight = new THREE.PointLight(0xffffff, 1200, 200); // Większy zasięg, wysoka intensywność
+sunLight.position.set(0, 0, 0);
+scene.add(sunLight);
+
+const ambientLight = new THREE.AmbientLight(0x404040, .4); // Delikatne ambientowe światło
 scene.add(ambientLight);
+
+
+
+// background
+const backgroundTexture = textureLoader.load('images/space-bg.png');
+backgroundTexture.encoding = THREE.sRGBEncoding;
+scene.background = backgroundTexture;
+
+
 
 // loop
 function animate() {
+    
     requestAnimationFrame(animate);
 
-    earthMesh.rotation.y += 0.03;
-    earthPivot.rotation.y += 0.005;
-    moonOrbitPivot.rotation.y += 0.007;
+    if (!isPaused) {
+        earthMesh.rotation.y += 0.03;
+        earthPivot.rotation.y += 0.005;
+        moonOrbitPivot.rotation.y += 0.007;
+    }
 
     renderer.render(scene, camera);
+    
 }
 
 animate();
+
 
 // handle resize
 window.addEventListener('resize', () => {
@@ -88,3 +111,25 @@ window.addEventListener('resize', () => {
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
 });
+
+
+
+// buttons / controls
+const pauseToggle = document.querySelector('#pause');
+const helpersToggle = document.querySelector('#helpersOff');
+const backgroundToggle = document.querySelector('#backgroundOff');
+const resetBtn = document.querySelector('#reset');
+
+pauseToggle.addEventListener('click', () => isPaused = !isPaused);
+
+helpersToggle.addEventListener('click', () => {
+    isHelpers = !isHelpers;
+
+    gridHelper.visible = isHelpers;
+    axesHelper.visible = isHelpers;
+});
+
+backgroundToggle.addEventListener('click', () => isBackground = !isBackground);
+
+resetBtn.addEventListener('click', () => location.reload());
+
