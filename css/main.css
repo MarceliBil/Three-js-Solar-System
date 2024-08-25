@@ -11973,7 +11973,7 @@ textarea.form-control-lg {
 }
 
 body {
-  background-color: #000;
+  background-color: #000000;
   color: #fff;
   overflow: hidden;
   font-family: sans-serif;
@@ -11984,6 +11984,7 @@ canvas {
   cursor: grab;
   position: absolute;
   inset: 0;
+  z-index: -1;
 }
 
 .footer {
@@ -11993,6 +11994,7 @@ canvas {
   transform: translateX(-50%);
   color: #fff;
   text-align: center;
+  pointer-events: none;
 }
 
 .info {

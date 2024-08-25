@@ -68,23 +68,30 @@ moonMesh.position.set(10, 0, 0);
 
 scene.add(sunMesh);
 
-const sunLight = new THREE.PointLight(0xffffff, 1200, 200); // Większy zasięg, wysoka intensywność
+// Renderer configuration
+renderer.shadowMap.enabled = true;
+
+// Lighting configuration
+const sunLight = new THREE.PointLight(0xffffff, 1200, 200);
 sunLight.position.set(0, 0, 0);
+sunLight.castShadow = true;
 scene.add(sunLight);
 
-const ambientLight = new THREE.AmbientLight(0x404040, .4); // Delikatne ambientowe światło
+const ambientLight = new THREE.AmbientLight(0x404040, 0.3);
 scene.add(ambientLight);
 
+// Mesh shadow configuration;
+earthMesh.castShadow = true;
+earthMesh.receiveShadow = true;
+moonMesh.castShadow = true;
+moonMesh.receiveShadow = true;
 
+// scene background
+const sceneBackgroundTexture = textureLoader.load('images/space-bg.png');
+sceneBackgroundTexture.encoding = THREE.sRGBEncoding;
+scene.background = sceneBackgroundTexture;
 
-// background
-const backgroundTexture = textureLoader.load('images/space-bg.png');
-backgroundTexture.encoding = THREE.sRGBEncoding;
-scene.background = backgroundTexture;
-
-
-
-// loop
+// animation loop
 function animate() {
     
     requestAnimationFrame(animate);
@@ -98,7 +105,6 @@ function animate() {
     renderer.render(scene, camera);
     
 }
-
 animate();
 
 
@@ -113,23 +119,24 @@ window.addEventListener('resize', () => {
 });
 
 
-
 // buttons / controls
 const pauseToggle = document.querySelector('#pause');
-const helpersToggle = document.querySelector('#helpersOff');
-const backgroundToggle = document.querySelector('#backgroundOff');
+const helpersToggle = document.querySelector('#helpers');
+const backgroundToggle = document.querySelector('#background');
 const resetBtn = document.querySelector('#reset');
 
 pauseToggle.addEventListener('click', () => isPaused = !isPaused);
 
 helpersToggle.addEventListener('click', () => {
     isHelpers = !isHelpers;
-
     gridHelper.visible = isHelpers;
     axesHelper.visible = isHelpers;
 });
 
-backgroundToggle.addEventListener('click', () => isBackground = !isBackground);
+backgroundToggle.addEventListener('click', () => {
+    isBackground = !isBackground;
+    scene.background = isBackground ? sceneBackgroundTexture : null;
+});
 
 resetBtn.addEventListener('click', () => location.reload());
 
