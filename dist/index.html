@@ -4,12 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Three.js Playground</title>
-  <script type="module" crossorigin src="/assets/index-CbhXqAdV.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-BRVCO28V.css">
+  
+  <script type="module" crossorigin src="/assets/index-DB8vDYo-.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-C2jqQMEt.css">
 </head>
 <body>
+    <div class="info-box alert d-flex align-items-center justify-content-center" role="alert">
+        <i class="fas fa-info-circle me-2"></i>
+        <span>Drag scene to explore / Scroll to zoom</span>
+    </div>
+    
+
+    <div class="control-panel">
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="pause" checked>
+            <label class="form-check-label" for="pause">Play</label>
+        </div>
+
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="helpers" checked>
+            <label class="form-check-label" for="helpersOff">Helpers</label>
+        </div>
+
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="background" checked>
+            <label class="form-check-label" for="backgroundOff">Background</label>
+        </div>
+
+        <button type="button" class="btn" id="reset">Reset scene</button>
+    </div>
 
     <footer class="footer">&copy;2024. Marceli Bil</footer>
 
+    
 </body>
 </html>
