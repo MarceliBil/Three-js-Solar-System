@@ -30,6 +30,24 @@ body {
 }
 
 
+@mixin breakpoint($bpValue) {
+    @if $bpValue == xs {
+        @media screen and (min-width: 576px) {
+            @content;
+        }
+    } @else if $bpValue == md {
+        @media screen and (min-width: 768px) {
+            @content;
+        }
+    }
+    @else if $bpValue == lg {
+        @media screen and (min-width: 992px) {
+            @content;
+        }
+    }
+}
+
+
 canvas {
     position: absolute;
     inset: 0;
@@ -111,28 +129,28 @@ canvas {
     left: 10px;
     max-width: 150px;
     padding: 0.7rem;
-    // transform: translateX(-50%);
     border: 1px solid $color-white;
     background-color: rgba($color-black, .7) !important;
     z-index: 1;
     pointer-events: none;
 
 
-    @media screen and (min-width: 576px) {
+    @include breakpoint(xs) {
         max-width: 250px;
         top: 15px;
         left: 15px;
         padding: 1rem;
     }
 
-    @media screen and (min-width: 768px) {
+
+    @include breakpoint(md) {
         max-width: unset;
         top: 20px;
         left: 20px;
-        
     }
 
-    @media screen and (min-width: 992px) {
+
+    @include breakpoint(lg) {
         left: 50%;
         transform: translateX(-50%);
     }
@@ -173,14 +191,14 @@ canvas {
     }
 
 
-    @media screen and (min-width: 576px) {
+    @include breakpoint(xs) {
         top: 15px;
         right: 15px;
         padding: 1rem;
     }
 
 
-    @media screen and (min-width: 768px) {
+    @include breakpoint(md) {
         top: 20px;
         right: 20px;
     }
