@@ -1,6 +1,10 @@
-// Import all of Bootstrap's CSS
 @import "~bootstrap/scss/bootstrap";
 @import "@fortawesome/fontawesome-free/css/all.css";
+
+
+// VARS
+$color-white: #ffffff;
+$color-black: #000000;
 
 
 * {
@@ -9,9 +13,10 @@
     box-sizing: border-box;
 }
 
+
 body {
-    background-color: #000000;
-    color: #fff;
+    background-color: $color-black;
+    color: $color-white;
     overflow: hidden;
     font-family: sans-serif;
     font-size: 1.1em;
@@ -26,10 +31,10 @@ body {
 
 
 canvas {
-    cursor: grab;
     position: absolute;
     inset: 0;
     z-index: -1;
+    cursor: grab;   
 }
 
 
@@ -38,7 +43,7 @@ canvas {
     bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
-    color: #fff;
+    color: $color-white;
     text-align: center;
     pointer-events: none;
 }
@@ -46,28 +51,28 @@ canvas {
 
 .info {
     position: absolute;
-    border: 1px solid #fff;
     height: 50px;
     width: 100%;
     max-width: 300px;
     @include flex;
     top: 30px;
     right: 30px;
+    border: 1px solid $color-white;
     pointer-events: none;
 }
 
 
 .button {
     position: absolute;
-    border: 1px solid #fff;
-    padding: 0 15px;
-    width: 100px;
-    height: 50px;
-    outline: none;
-    background-color: #fff;
-    color: #000;
     right: 30px;
     top: 100px;
+    width: 100px;
+    height: 50px;
+    border: 1px solid $color-white;
+    padding: 0 15px;
+    outline: none;
+    background-color: $color-white;
+    color: $color-black;
     transition: background-color .2s, color .2s;
     cursor: pointer;
     @include flex;
@@ -93,37 +98,59 @@ canvas {
 
 
     &:hover {
-        background-color: #000;
-        color: #fff;
+        background-color: $color-black;
+        color: $color-white;
     }
 }
 
 
 .info-box {
-    border: 1px solid #fff;
-    width: fit-content;
     position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    top: 20px;
-    background-color: rgba(#000, .7) !important;
+    width: fit-content;
+    top: 10px;
+    left: 10px;
+    max-width: 150px;
+    padding: 0.7rem;
+    // transform: translateX(-50%);
+    border: 1px solid $color-white;
+    background-color: rgba($color-black, .7) !important;
     z-index: 1;
     pointer-events: none;
+
+
+    @media screen and (min-width: 576px) {
+        max-width: 250px;
+        top: 15px;
+        left: 15px;
+        padding: 1rem;
+    }
+
+    @media screen and (min-width: 768px) {
+        max-width: unset;
+        top: 20px;
+        left: 20px;
+        
+    }
+
+    @media screen and (min-width: 992px) {
+        left: 50%;
+        transform: translateX(-50%);
+    }
 }
 
 
 .control-panel {
     position: absolute;
-    right: 20px;
-    top: 20px;
+    top: 10px;
+    right: 10px;
+    background-color: rgba($color-black, .7);
+    border: 1px solid $color-white;
     display: flex;
     flex-direction: column;
     gap: 10px;
     z-index: 1;
-    border: 1px solid #fff;
     border-radius: 0.375rem;
-    padding: 1rem;
-    background-color: rgba(#000, .7);
+    padding: 0.7rem;
 
 
     label,
@@ -131,15 +158,30 @@ canvas {
         cursor: pointer;
     }
 
+
     .btn {
-        border: 1px solid #fff;
+        border: 1px solid $color-white;
         border-radius: 0.375rem;
-        color: #fff;
+        color: $color-white;
         margin-top: 10px;
 
+
         &:hover {
-            background-color: #fff;
-            color: #000;
+            background-color: $color-white;
+            color: $color-black;
         }
+    }
+
+
+    @media screen and (min-width: 576px) {
+        top: 15px;
+        right: 15px;
+        padding: 1rem;
+    }
+
+
+    @media screen and (min-width: 768px) {
+        top: 20px;
+        right: 20px;
     }
 }
