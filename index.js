@@ -11,7 +11,12 @@ const scene = new THREE.Scene();
 
 // camera
 const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.0001, 10000);
-camera.position.set(window.innerWidth < 576 ? -70 : 10, 20, 70);;
+
+if (window.innerWidth < 576) {
+    camera.position.set(10, 8, 75);
+} else {
+    camera.position.set(10, 8, 45);
+}
 
 // renderer
 const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
@@ -37,7 +42,7 @@ const createMaterial = (texturePath, materialType = 'Phong') => {
         Basic: THREE.MeshBasicMaterial,
         Phong: THREE.MeshPhongMaterial,
     };
-    
+
     return new materials[materialType]({ map: texture });
 };
 
@@ -48,17 +53,17 @@ const sunMaterial = createMaterial('images/sun-texture.jpg', 'Basic');
 const earthMaterial = createMaterial('images/earth-texture.jpg', 'Phong');
 const moonMaterial = createMaterial('images/moon-texture.jpg', 'Phong');
 
-const sunGeometry = new THREE.SphereGeometry(12, 32, 32);
-const earthGeometry = new THREE.SphereGeometry(5, 32, 32);
-const moonGeometry = new THREE.SphereGeometry(1.5, 32, 32);
+const sunGeometry = new THREE.SphereGeometry(6, 64, 64);
+const earthGeometry = new THREE.SphereGeometry(2, 64, 64);
+const moonGeometry = new THREE.SphereGeometry(0.6, 32, 32);
 
 const sunMesh = createMesh(sunGeometry, sunMaterial);
 const earthMesh = createMesh(earthGeometry, earthMaterial);
 const moonMesh = createMesh(moonGeometry, moonMaterial);
 
 sunMesh.position.set(0, 0, 0);
-earthMesh.position.set(35, 0, 0);
-earthMesh.rotation.z = THREE.MathUtils.degToRad(23.5);
+earthMesh.position.set(30, 0, 0);
+earthMesh.rotation.z = THREE.MathUtils.degToRad(23.44);
 
 const moonOrbitPivot = new THREE.Object3D();
 moonOrbitPivot.add(moonMesh);
@@ -69,9 +74,9 @@ earthPivot.add(moonOrbitPivot)
 scene.add(earthPivot);
 earthPivot.add(earthMesh);
 
-moonOrbitPivot.rotation.x = THREE.MathUtils.degToRad(6);
+moonOrbitPivot.rotation.x = THREE.MathUtils.degToRad(5.14);
 
-moonMesh.position.set(10, 0, 0);
+moonMesh.position.set(6, 0, 0);
 
 scene.add(sunMesh);
 
@@ -100,17 +105,18 @@ scene.background = sceneBackgroundTexture;
 
 // animation loop
 function animate() {
-    
+
     requestAnimationFrame(animate);
 
     if (!isPaused) {
-        earthMesh.rotation.y += 0.03;
-        earthPivot.rotation.y += 0.005;
-        moonOrbitPivot.rotation.y += 0.007;
+        earthMesh.rotation.y += 0.05;
+        earthPivot.rotation.y += 0.002;
+        moonOrbitPivot.rotation.y += 0.026;
     }
 
     renderer.render(scene, camera);
-    
+    controls.update();
+
 }
 animate();
 
